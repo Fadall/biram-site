@@ -4,23 +4,18 @@ export interface Post {
   _id: string;
   title?: string;
   subtitle?: string;
-  slug: { current: string };
   publishDate: string;
   type: PostType;
-  body: any; // PortableText
+  body: any;
   closingLine?: string;
-  coverImage?: any;
+  customClosing?: string;
+  coverImage?: string;
   coverImageAlt?: string;
   authorSignature?: string;
-  relatedPost?: {
-    publishDate: string;
-    slug: { current: string };
-  };
 }
 
 export interface PostListItem {
   _id: string;
-  slug: { current: string };
   publishDate: string;
   type: PostType;
   title?: string;

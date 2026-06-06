@@ -31,6 +31,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -66,14 +67,12 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
     }
   }
 
-  const navigate = useNavigate();
-
   function handleDayClick(day: number) {
   const post = postMap[day];
   if (!post) return;
-  navigate(`/posts/${post.slug.current}`);
+  navigate(`/posts/${post._id}`);
   onClose();
-  }
+}
 
   return (
     <>

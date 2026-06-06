@@ -12,8 +12,7 @@ export function formatDate(date: string | Date, formatStr: string = 'd MMMM yyyy
   return format(d, formatStr, { locale: fr });
 }
 
-export function getAnnouncedDate(publishDate: string, relatedPostDate?: string) {
-  if (relatedPostDate) return formatDate(relatedPostDate);
+export function getAnnouncedDate(publishDate: string) {
   const nextDay = addDays(parseISO(publishDate), 1);
   return formatDate(nextDay);
 }

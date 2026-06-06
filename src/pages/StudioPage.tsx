@@ -1,0 +1,10 @@
+import { Studio } from 'sanity'
+import config from '../../sanity.config'
+
+export function StudioPage() {
+  return (
+    <div style={{ position: 'fixed', inset: 0, zIndex: 1 }}>
+      <Studio config={config} />
+    </div>
+  )
+}

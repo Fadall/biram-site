@@ -9,16 +9,17 @@ import { CalendarModal } from './components/CalendarModal';
 import { Navigation } from './components/Navigation';
 import { Post } from './lib/types';
 import { TopNavigation } from './components/TopNavigation';
+import { StudioPage } from './pages/StudioPage'
 
 function PostPage() {
-  const { slug } = useParams<{ slug: string }>();
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const { getPostBySlug, getLatestPost, getAllPostsForCalendar } = usePosts();
+  const { getPostById, getLatestPost, getAllPostsForCalendar, loading  } = usePosts();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const currentPostData = slug
-    ? getPostBySlug(slug)
+  const currentPostData = id
+    ? getPostById(id)
     : { post: getLatestPost(), next: null, prev: null };
 
   const post = currentPostData.post;
@@ -46,6 +47,23 @@ function PostPage() {
     trackTouch: true,
     delta: 50,
   });
+
+if (loading) {
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#FAFAF7',
+      fontFamily: 'Playfair Display, serif',
+      fontSize: '18px',
+      color: '#6B6B6B',
+    }}>
+      Chargement...
+    </div>
+  )
+}
 
   if (!post) {
     return (
@@ -92,8 +110,9 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<PostPage />} />
-        <Route path="/posts/:slug" element={<PostPage />} />
-      </Routes>
+          <Route path="/posts/:id" element={<PostPage />} />
+          <Route path="/studio/*" element={<StudioPage />} />
+        </Routes>
     </Router>
   );
 }

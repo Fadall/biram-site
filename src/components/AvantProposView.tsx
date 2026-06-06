@@ -4,9 +4,8 @@ import { PortableTextContent } from './PortableTextContent';
 
 export function AvantProposView({ post }: { post: Post }) {
   const announcedDate = getAnnouncedDate(
-    post.publishDate,
-    post.relatedPost?.publishDate
-  );
+  post.publishDate,
+);
 
   return (
     <article style={{
@@ -68,16 +67,6 @@ export function AvantProposView({ post }: { post: Post }) {
           La réflexion qui nous réunira demain le {announcedDate}
         </h1>
 
-        <p style={{
-          fontFamily: 'Lora, serif',
-          fontStyle: 'italic',
-          color: '#9A8A6A',
-          fontSize: '18px',
-          marginBottom: '48px',
-        }}>
-          Insha&apos;Allah
-        </p>
-
         {/* SÉPARATEUR */}
         <div style={{
           width: '64px',
@@ -116,7 +105,6 @@ export function AvantProposView({ post }: { post: Post }) {
             }} />
             <div style={{ width: '32px', height: '1px', background: '#D4C4A4' }} />
           </div>
-
           <p style={{
             fontFamily: 'Lora, serif',
             fontStyle: 'italic',
@@ -124,7 +112,7 @@ export function AvantProposView({ post }: { post: Post }) {
             fontSize: '15px',
             marginBottom: '12px',
           }}>
-            À demain in sha&apos;a Allah
+            {post.customClosing || 'À demain in sha\'a Allah'}
           </p>
           <p style={{
             fontFamily: 'Inter, sans-serif',
