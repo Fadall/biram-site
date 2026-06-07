@@ -1,45 +1,69 @@
 import { Post } from '../lib/types';
 import { formatDate } from '../lib/utils';
 import { PortableTextContent } from './PortableTextContent';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState } from 'react';
+import { ImageViewer } from './ImageViewer';
 
 export function PenseeView({ post }: { post: Post }) {
-  const { scrollY } = useScroll();
-  const imageHeight = useTransform(scrollY, [-200, 0], ['calc(44svh + 200px)', '44svh']);
-  const imageScale = useTransform(scrollY, [-200, 0], [1.15, 1]);
+  const [showImage, setShowImage] = useState(false);
   return (
     <article style={{ minHeight: '100vh', background: '#FAFAF7', paddingBottom: '120px' }}>
 
       {/* IMAGE */}
       {post.coverImage && (
-      <motion.div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: imageHeight,
-          minHeight: '260px',
-          maxHeight: '600px',
-          overflow: 'hidden',
-        }}
-      >
-        <motion.img
-          src={post.coverImage}
-          alt={post.coverImageAlt || post.title}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'top',
-            scale: imageScale,
-          }}
-        />
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, #FAFAF7 100%)',
-        }} />
-      </motion.div>
-    )}
+  <div
+    onClick={() => setShowImage(true)}
+    style={{
+      position: 'relative',
+      width: '100%',
+      height: '38svh',
+      minHeight: '260px',
+      maxHeight: '420px',
+      overflow: 'hidden',
+      cursor: 'pointer',
+    }}
+  >
+    <img
+      src={post.coverImage}
+      alt={post.coverImageAlt || post.title}
+      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+    />
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, #FAFAF7 100%)',
+      pointerEvents: 'none',
+    }} />
+
+    {/* INDICATEUR DISCRET */}
+    <div style={{
+      position: 'absolute',
+      top: '16px',
+      right: '16px',
+      width: '36px',
+      height: '36px',
+      borderRadius: '50%',
+      background: 'rgba(0, 0, 0, 0.4)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      color: 'white',
+      fontSize: '16px',
+      pointerEvents: 'none',
+    }}>
+      ⛶
+    </div>
+  </div>
+)}
+
+{showImage && post.coverImage && (
+  <ImageViewer
+    src={post.coverImage}
+    alt={post.coverImageAlt || post.title || ''}
+    onClose={() => setShowImage(false)}
+  />
+)}
 
       {/* CONTENU */}
       <div style={{
