@@ -113,3 +113,19 @@ h1, h2, h3, h4, .font-serif-display {
     transform: scale(1);
   }
 }
+
+/* MODE SOMBRE AUTOMATIQUE */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: #121212;
+    --bg-avant-propos: #1A1612;
+    --text-main: #E8E5DF;
+    --text-secondary: #999;
+    --border-color: #2A2A2A;
+  }
+
+  body {
+    background-color: #121212 !important;
+    color: #E8E5DF !important;
+  }
+}

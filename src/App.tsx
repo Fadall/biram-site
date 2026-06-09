@@ -9,36 +9,37 @@ import { CalendarModal } from './components/CalendarModal';
 import { Navigation } from './components/Navigation';
 import { Post } from './lib/types';
 import { TopNavigation } from './components/TopNavigation';
-import { StudioPage } from './pages/StudioPage'
+import { StudioPage } from './pages/StudioPage';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { LanguageToggle } from './components/LanguageToggle';
+import { useTranslatedPost } from './hooks/useTranslatedPost';
 
 function PostPage() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const { getPostById, getLatestPost, getAllPostsForCalendar, loading  } = usePosts();
+  const { getPostById, getLatestPost, getAllPostsForCalendar, loading } = usePosts();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
-  const currentPostData = id
-    ? getPostById(id)
-    : { post: getLatestPost(), next: null, prev: null };
+  const currentPostData = id ? getPostById(id) : getLatestPost();
 
-  const post = currentPostData.post;
+  const post = currentPostData?.post || null;
+  const prev = currentPostData?.prev || null;
+  const next = currentPostData?.next || null;
+
+  const { post: translatedPost, translating } = useTranslatedPost(post);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
   const goToPrev = useCallback(() => {
-    if (currentPostData.prev) {
-      navigate(`/posts/${currentPostData.prev}`);
-    }
-  }, [currentPostData.prev, navigate]);
+    if (prev) navigate(`/posts/${prev}`);
+  }, [prev, navigate]);
 
   const goToNext = useCallback(() => {
-    if (currentPostData.next) {
-      navigate(`/posts/${currentPostData.next}`);
-    }
-  }, [currentPostData.next, navigate]);
+    if (next) navigate(`/posts/${next}`);
+  }, [next, navigate]);
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: goToNext,
@@ -48,26 +49,33 @@ function PostPage() {
     delta: 50,
   });
 
-if (loading) {
-  return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: '#FAFAF7',
-      fontFamily: 'Playfair Display, serif',
-      fontSize: '18px',
-      color: '#6B6B6B',
-    }}>
-      Chargement...
-    </div>
-  )
-}
-
-  if (!post) {
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAFAF7] text-xl">
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#FAFAF7',
+        fontSize: '18px',
+        color: '#6B6B6B'
+      }}>
+        Chargement...
+      </div>
+    );
+  }
+
+  if (!translatedPost) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#FAFAF7',
+        fontSize: '18px',
+        color: '#6B6B6B'
+      }}>
         Publication non trouvée
       </div>
     );
@@ -75,27 +83,22 @@ if (loading) {
 
   const renderPost = (post: Post) => {
     switch (post.type) {
-      case 'billet':
-        return <BilletView post={post} />;
-      case 'avant_propos':
-        return <AvantProposView post={post} />;
-      case 'pensee':
-        return <PenseeView post={post} />;
-      default:
-        return null;
+      case 'billet': return <BilletView post={post} />;
+      case 'avant_propos': return <AvantProposView post={post} />;
+      case 'pensee': return <PenseeView post={post} />;
+      default: return null;
     }
   };
 
   return (
     <div {...swipeHandlers} style={{ minHeight: '100vh' }}>
-    <TopNavigation
-      prevSlug={currentPostData.prev || undefined}
-      nextSlug={currentPostData.next || undefined}
-    />
-      {renderPost(post)}
-
+      <TopNavigation
+        prevSlug={prev || undefined}
+        nextSlug={next || undefined}
+      />
+      <LanguageToggle translating={translating} />
+      {renderPost(translatedPost)}
       <Navigation onCalendarOpen={() => setIsCalendarOpen(true)} />
-
       <CalendarModal
         isOpen={isCalendarOpen}
         onClose={() => setIsCalendarOpen(false)}
@@ -107,13 +110,15 @@ if (loading) {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<PostPage />} />
+    <LanguageProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<PostPage />} />
           <Route path="/posts/:id" element={<PostPage />} />
           <Route path="/studio/*" element={<StudioPage />} />
         </Routes>
-    </Router>
+      </Router>
+    </LanguageProvider>
   );
 }
 
