@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
+import { getTheme } from '../lib/theme'
 
 interface TopNavigationProps {
   prevSlug?: string;
@@ -10,6 +12,8 @@ export function TopNavigation({ prevSlug, nextSlug }: TopNavigationProps) {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { isDark } = useTheme();
+  const theme = getTheme(isDark)
 
   useEffect(() => {
     const handleScroll = () => {

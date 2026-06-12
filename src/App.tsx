@@ -9,7 +9,6 @@ import { CalendarModal } from './components/CalendarModal';
 import { Navigation } from './components/Navigation';
 import { Post } from './lib/types';
 import { TopNavigation } from './components/TopNavigation';
-import { StudioPage } from './pages/StudioPage';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LanguageToggle } from './components/LanguageToggle';
 import { useTranslatedPost } from './hooks/useTranslatedPost';
@@ -115,7 +114,6 @@ function App() {
         <Routes>
           <Route path="/" element={<PostPage />} />
           <Route path="/posts/:id" element={<PostPage />} />
-          <Route path="/studio/*" element={<StudioPage />} />
         </Routes>
       </Router>
     </LanguageProvider>

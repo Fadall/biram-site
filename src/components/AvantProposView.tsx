@@ -1,16 +1,24 @@
 import { Post } from '../lib/types';
-import { getAnnouncedDate } from '../lib/utils';
 import { PortableTextContent } from './PortableTextContent';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t, formatDateByLang } from '../lib/translations';
+import { useTheme } from '../hooks/useTheme';
+import { getTheme } from '../lib/theme';
 
 export function AvantProposView({ post }: { post: Post }) {
-  const announcedDate = getAnnouncedDate(
-  post.publishDate,
-);
+  const { language } = useLanguage();
+  const { isDark } = useTheme();
+  const theme = getTheme(isDark);
+
+  const announcedDate = formatDateByLang(
+    new Date(new Date(post.publishDate).getTime() + 86400000).toISOString().split('T')[0],
+    language
+  );
 
   return (
     <article style={{
       minHeight: '100vh',
-      background: 'linear-gradient(170deg, #F7F2EA 0%, #EDE6D8 40%, #F0EBE1 100%)',
+      background: theme.bgAvantPropos,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -22,7 +30,6 @@ export function AvantProposView({ post }: { post: Post }) {
         textAlign: 'center',
       }}>
 
-        {/* ORNEMENT HAUT */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
@@ -30,19 +37,18 @@ export function AvantProposView({ post }: { post: Post }) {
           gap: '12px',
           marginBottom: '40px',
         }}>
-          <div style={{ width: '32px', height: '1px', background: '#C4B08A' }} />
+          <div style={{ width: '32px', height: '1px', background: theme.ornament }} />
           <div style={{
             width: '8px',
             height: '8px',
             borderRadius: '50%',
-            border: '1px solid #C4B08A',
+            border: `1px solid ${theme.ornament}`,
           }} />
-          <div style={{ width: '32px', height: '1px', background: '#C4B08A' }} />
+          <div style={{ width: '32px', height: '1px', background: theme.ornament }} />
         </div>
 
-        {/* BADGE */}
         <p style={{
-          color: '#B8860B',
+          color: theme.avantPropos,
           letterSpacing: '0.28em',
           fontSize: '10px',
           fontWeight: 600,
@@ -50,36 +56,33 @@ export function AvantProposView({ post }: { post: Post }) {
           marginBottom: '40px',
           fontFamily: 'Inter, sans-serif',
         }}>
-          Avant-propos
+          {t('avant_propos', language)}
         </p>
 
-        {/* PHRASE D'ACCROCHE */}
         <h1 style={{
           fontFamily: 'Playfair Display, serif',
           fontSize: '22px',
           fontWeight: 600,
-          color: '#2A2218',
+          color: theme.text,
           lineHeight: 1.5,
           letterSpacing: '-0.01em',
-          marginBottom: '12px',
+          marginBottom: '48px',
           padding: '0 8px',
         }}>
-          La réflexion qui nous réunira demain le {announcedDate}
+          {t('la_reflexion_qui_nous_reunira', language)} {announcedDate}
         </h1>
 
-        {/* SÉPARATEUR */}
         <div style={{
           width: '64px',
           height: '1px',
-          background: '#D4C4A4',
+          background: theme.ornamentLight,
           margin: '0 auto 48px',
         }} />
 
-        {/* CORPS */}
         <div style={{
           fontFamily: 'Lora, serif',
           fontSize: '17px',
-          color: '#3A2F22',
+          color: theme.textSecondary,
           lineHeight: 2,
           maxWidth: '420px',
           margin: '0 auto',
@@ -87,7 +90,6 @@ export function AvantProposView({ post }: { post: Post }) {
           <PortableTextContent value={post.body} />
         </div>
 
-        {/* CLÔTURE */}
         <div style={{ marginTop: '56px' }}>
           <div style={{
             display: 'flex',
@@ -96,27 +98,28 @@ export function AvantProposView({ post }: { post: Post }) {
             gap: '12px',
             marginBottom: '32px',
           }}>
-            <div style={{ width: '32px', height: '1px', background: '#D4C4A4' }} />
+            <div style={{ width: '32px', height: '1px', background: theme.ornamentLight }} />
             <div style={{
               width: '8px',
               height: '8px',
               borderRadius: '50%',
-              border: '1px solid #D4C4A4',
+              border: `1px solid ${theme.ornamentLight}`,
             }} />
-            <div style={{ width: '32px', height: '1px', background: '#D4C4A4' }} />
+            <div style={{ width: '32px', height: '1px', background: theme.ornamentLight }} />
           </div>
+
           <p style={{
             fontFamily: 'Lora, serif',
             fontStyle: 'italic',
-            color: '#8A7A5A',
+            color: theme.textMuted,
             fontSize: '15px',
             marginBottom: '12px',
           }}>
-            {post.customClosing || 'À demain in sha\'a Allah'}
+            {post.customClosing || t('a_demain_in_sha_a_allah', language)}
           </p>
           <p style={{
             fontFamily: 'Inter, sans-serif',
-            color: '#A09070',
+            color: theme.textLight,
             fontSize: '14px',
             letterSpacing: '0.2em',
             fontWeight: 500,

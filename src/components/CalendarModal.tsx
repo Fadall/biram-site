@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { PostListItem } from '../lib/types';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../hooks/useTheme';
+import { getTheme } from '../lib/theme';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t } from '../lib/translations';
 
 interface CalendarModalProps {
   isOpen: boolean;
@@ -8,39 +12,59 @@ interface CalendarModalProps {
   posts: PostListItem[];
 }
 
-const WEEKDAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
-
-const MONTHS = [
-  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-];
-
-const typeColors: Record<string, string> = {
-  billet: '#2C4A7C',
-  avant_propos: '#B8860B',
-  pensee: '#6B4C8C',
-};
-
-const typeLabels: Record<string, string> = {
-  billet: 'Billet',
-  avant_propos: 'Avant-propos',
-  pensee: 'Pensée',
-};
-
 export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
+  const { isDark } = useTheme();
+  const theme = getTheme(isDark);
+  const { language } = useLanguage();
+
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const navigate = useNavigate();
 
+  const WEEKDAYS = [
+    t('lun', language),
+    t('mar', language),
+    t('mer', language),
+    t('jeu', language),
+    t('ven', language),
+    t('sam', language),
+    t('dim', language),
+  ];
+
+  const MONTHS = [
+    t('janvier', language),
+    t('fevrier', language),
+    t('mars', language),
+    t('avril', language),
+    t('mai', language),
+    t('juin', language),
+    t('juillet', language),
+    t('aout', language),
+    t('septembre', language),
+    t('octobre', language),
+    t('novembre', language),
+    t('decembre', language),
+  ];
+
+  const typeColors: Record<string, string> = {
+    billet: theme.billet,
+    avant_propos: theme.avantPropos,
+    pensee: theme.pensee,
+  };
+
+  const typeLabels: Record<string, string> = {
+    billet: language === 'en' ? 'Post' : 'Billet',
+    avant_propos: language === 'en' ? 'Foreword' : 'Avant-propos',
+    pensee: language === 'en' ? 'Thought' : 'Pensée',
+  };
+
   if (!isOpen) return null;
 
-  // Calculs calendrier
   const firstDay = new Date(year, month, 1).getDay();
   const startOffset = firstDay === 0 ? 6 : firstDay - 1;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Map des posts par jour
   const postMap: Record<number, PostListItem> = {};
   posts.forEach(p => {
     const date = new Date(p.publishDate + 'T00:00:00');
@@ -68,15 +92,14 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
   }
 
   function handleDayClick(day: number) {
-  const post = postMap[day];
-  if (!post) return;
-  navigate(`/posts/${post._id}`);
-  onClose();
-}
+    const post = postMap[day];
+    if (!post) return;
+    navigate(`/posts/${post._id}`);
+    onClose();
+  }
 
   return (
     <>
-      {/* OVERLAY */}
       <div
         onClick={onClose}
         style={{
@@ -87,14 +110,13 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
         }}
       />
 
-      {/* MODAL */}
       <div
         style={{
           position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
-          background: '#FAFAF7',
+          background: theme.bg,
           borderRadius: '24px 24px 0 0',
           zIndex: 99999,
           maxHeight: '85vh',
@@ -102,28 +124,27 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
           boxShadow: '0 -10px 40px rgba(0,0,0,0.15)',
         }}
       >
-        {/* DRAG HANDLE */}
         <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '12px' }}>
-          <div style={{ width: '40px', height: '4px', background: '#ddd', borderRadius: '2px' }} />
+          <div style={{ width: '40px', height: '4px', background: theme.borderLight, borderRadius: '2px' }} />
         </div>
 
         <div style={{ padding: '16px 24px 32px' }}>
 
-          {/* TITRE + FERMER */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: '#1A1A1A' }}>
-              Allez droit à vos billets
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', color: theme.text }}>
+              {t('allez_droit_a_vos_billets', language)}
             </h2>
             <button
               onClick={onClose}
               style={{
-                background: '#E8E5DF',
+                background: theme.border,
                 border: 'none',
                 borderRadius: '50%',
                 width: '32px',
                 height: '32px',
                 cursor: 'pointer',
                 fontSize: '16px',
+                color: theme.text,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -133,50 +154,50 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
             </button>
           </div>
 
-          {/* NAVIGATION MOIS */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
             <button
               onClick={prevMonth}
               style={{
                 background: 'transparent',
-                border: '1px solid #E8E5DF',
+                border: `1px solid ${theme.border}`,
                 borderRadius: '50%',
                 width: '36px',
                 height: '36px',
                 cursor: 'pointer',
                 fontSize: '14px',
+                color: theme.text,
               }}
             >
               ◀
             </button>
-            <span style={{ fontSize: '16px', fontWeight: 500, textTransform: 'capitalize' }}>
+            <span style={{ fontSize: '16px', fontWeight: 500, textTransform: 'capitalize', color: theme.text }}>
               {MONTHS[month]} {year}
             </span>
             <button
               onClick={nextMonth}
               style={{
                 background: 'transparent',
-                border: '1px solid #E8E5DF',
+                border: `1px solid ${theme.border}`,
                 borderRadius: '50%',
                 width: '36px',
                 height: '36px',
                 cursor: 'pointer',
                 fontSize: '14px',
+                color: theme.text,
               }}
             >
               ▶
             </button>
           </div>
 
-          {/* EN-TÊTE JOURS */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', marginBottom: '8px' }}>
-            {WEEKDAYS.map(d => (
+            {WEEKDAYS.map((d, i) => (
               <div
-                key={d}
+                key={i}
                 style={{
                   textAlign: 'center',
                   fontSize: '11px',
-                  color: '#999',
+                  color: theme.textMuted,
                   textTransform: 'uppercase',
                   letterSpacing: '1px',
                   padding: '4px 0',
@@ -187,15 +208,11 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
             ))}
           </div>
 
-          {/* GRILLE */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
-
-            {/* Cases vides */}
             {Array.from({ length: startOffset }).map((_, i) => (
               <div key={`empty-${i}`} />
             ))}
 
-            {/* Jours */}
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
               const post = postMap[day];
@@ -212,7 +229,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
                     padding: '8px 0',
                     borderRadius: '12px',
                     cursor: post ? 'pointer' : 'default',
-                    background: post ? '#f5f5f0' : 'transparent',
+                    background: post ? theme.bgSecondary : 'transparent',
                     transition: 'background 0.2s',
                   }}
                 >
@@ -220,7 +237,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
                     style={{
                       fontSize: '14px',
                       fontWeight: post ? 600 : 400,
-                      color: post ? '#1A1A1A' : '#ccc',
+                      color: post ? theme.text : theme.textVeryLight,
                     }}
                   >
                     {day}
@@ -232,7 +249,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
                         height: '6px',
                         borderRadius: '50%',
                         marginTop: '3px',
-                        background: typeColors[post.type] || '#999',
+                        background: typeColors[post.type] || theme.textMuted,
                       }}
                     />
                   )}
@@ -241,7 +258,6 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
             })}
           </div>
 
-          {/* LÉGENDE */}
           <div
             style={{
               display: 'flex',
@@ -249,7 +265,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
               gap: '20px',
               marginTop: '20px',
               paddingTop: '16px',
-              borderTop: '1px solid #E8E5DF',
+              borderTop: `1px solid ${theme.border}`,
             }}
           >
             {Object.entries(typeLabels).map(([key, label]) => (
@@ -262,7 +278,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
                     background: typeColors[key],
                   }}
                 />
-                <span style={{ fontSize: '11px', color: '#888' }}>{label}</span>
+                <span style={{ fontSize: '11px', color: theme.textMuted }}>{label}</span>
               </div>
             ))}
           </div>

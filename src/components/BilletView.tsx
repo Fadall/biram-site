@@ -1,13 +1,19 @@
 import { Post } from '../lib/types';
-import { formatDate } from '../lib/utils';
 import { PortableTextContent } from './PortableTextContent';
 import { useState } from 'react';
 import { ImageViewer } from './ImageViewer';
+import { useLanguage } from '../contexts/LanguageContext'
+import { t, formatDateByLang } from '../lib/translations'
+import { useTheme } from '../hooks/useTheme'
+import { getTheme } from '../lib/theme'
 
 export function BilletView({ post }: { post: Post }) {
   const [showImage, setShowImage] = useState(false);
+  const { language } = useLanguage()
+  const { isDark } = useTheme()
+  const theme = getTheme(isDark)
   return (
-    <article style={{ minHeight: '100vh', background: '#FAFAF7', paddingBottom: '120px' }}>
+    <article style={{ minHeight: '100vh', background: theme.bg, paddingBottom: '120px' }}>
 
       {/* IMAGE */}
       {post.coverImage && (
@@ -31,7 +37,7 @@ export function BilletView({ post }: { post: Post }) {
     <div style={{
       position: 'absolute',
       inset: 0,
-      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, #FAFAF7 100%)',
+      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, theme.bg 100%)',
       pointerEvents: 'none',
     }} />
 
@@ -73,7 +79,7 @@ export function BilletView({ post }: { post: Post }) {
         padding: '0 24px',
       }}>
         <div style={{
-          background: '#FAFAF7',
+          background: theme.bg,
           borderTopLeftRadius: '32px',
           borderTopRightRadius: '32px',
           paddingTop: '40px',
@@ -84,7 +90,7 @@ export function BilletView({ post }: { post: Post }) {
           {/* HEADER */}
           <header style={{ textAlign: 'center', marginBottom: '40px' }}>
             <p style={{
-              color: '#2C4A7C',
+              color: theme.billet,
               letterSpacing: '0.22em',
               fontSize: '10px',
               fontWeight: 600,
@@ -92,7 +98,7 @@ export function BilletView({ post }: { post: Post }) {
               marginBottom: '20px',
               fontFamily: 'Inter, sans-serif',
             }}>
-              Billet du {formatDate(post.publishDate)}
+              {t('billet_du', language)} {formatDateByLang(post.publishDate, language)}
             </p>
 
             {post.title && (
@@ -100,7 +106,7 @@ export function BilletView({ post }: { post: Post }) {
                 fontFamily: 'Playfair Display, serif',
                 fontSize: '24px',
                 fontWeight: 700,
-                color: '#1A1A1A',
+                color: theme.text,
                 lineHeight: 1.3,
                 letterSpacing: '-0.01em',
                 margin: 0,
@@ -113,7 +119,7 @@ export function BilletView({ post }: { post: Post }) {
             <div style={{
               width: '40px',
               height: '2px',
-              background: '#2C4A7C',
+              background: theme.billet,
               margin: '32px auto 0',
               borderRadius: '999px',
             }} />
@@ -123,7 +129,7 @@ export function BilletView({ post }: { post: Post }) {
           <div style={{
             fontFamily: 'Lora, serif',
             fontSize: '17px',
-            color: '#3A3A3A',
+            color: theme.textSecondary,
             maxWidth: '600px',
             margin: '0 auto',
             lineHeight: 1.9,
@@ -138,13 +144,13 @@ export function BilletView({ post }: { post: Post }) {
               <div style={{
                 width: '32px',
                 height: '1px',
-                background: '#E8E5DF',
+                background: theme.border,
                 margin: '0 auto 24px',
               }} />
               <p style={{
                 fontFamily: 'Playfair Display, serif',
                 fontStyle: 'italic',
-                color: '#2C4A7C',
+                color: theme.billet,
                 fontSize: '20px',
                 lineHeight: 1.4,
                 padding: '0 24px',
@@ -170,7 +176,7 @@ export function BilletView({ post }: { post: Post }) {
               fontSize: '15px',
               marginBottom: '4px',
             }}>
-              As-Salamu Aleykum
+              {t('as_salamu_aleykum', language)}
             </p>
             <p style={{
               fontFamily: 'Inter, sans-serif',

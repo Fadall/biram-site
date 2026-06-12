@@ -125,7 +125,17 @@ h1, h2, h3, h4, .font-serif-display {
   }
 
   body {
-    background-color: #121212 !important;
-    color: #E8E5DF !important;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Lora', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #0F0F0F;
+    color: #F0EDE5;
   }
+}
 }

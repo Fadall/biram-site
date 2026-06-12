@@ -1,13 +1,19 @@
 import { Post } from '../lib/types';
-import { formatDate } from '../lib/utils';
 import { PortableTextContent } from './PortableTextContent';
 import { useState } from 'react';
 import { ImageViewer } from './ImageViewer';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t, formatDateByLang } from '../lib/translations';
+import { useTheme } from '../hooks/useTheme';
+import { getTheme } from '../lib/theme'
 
 export function PenseeView({ post }: { post: Post }) {
   const [showImage, setShowImage] = useState(false);
+  const { language } = useLanguage()
+  const { isDark } = useTheme()
+  const theme = getTheme(isDark)
   return (
-    <article style={{ minHeight: '100vh', background: '#FAFAF7', paddingBottom: '120px' }}>
+    <article style={{ minHeight: '100vh', background: theme.bg, paddingBottom: '120px' }}>
 
       {/* IMAGE */}
       {post.coverImage && (
@@ -31,7 +37,7 @@ export function PenseeView({ post }: { post: Post }) {
     <div style={{
       position: 'absolute',
       inset: 0,
-      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, #FAFAF7 100%)',
+      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, theme.bg 100%)',
       pointerEvents: 'none',
     }} />
 
@@ -73,7 +79,7 @@ export function PenseeView({ post }: { post: Post }) {
         padding: '0 24px',
       }}>
         <div style={{
-          background: '#FAFAF7',
+          background: theme.bg,
           borderTopLeftRadius: '32px',
           borderTopRightRadius: '32px',
           paddingTop: '40px',
@@ -92,7 +98,7 @@ export function PenseeView({ post }: { post: Post }) {
               marginBottom: '20px',
               fontFamily: 'Inter, sans-serif',
             }}>
-              La pensée du samedi
+              {t('pensee_du_samedi', language)}
             </p>
 
             {post.subtitle && (
@@ -101,7 +107,7 @@ export function PenseeView({ post }: { post: Post }) {
                 fontSize: '26px',
                 fontWeight: 700,
                 fontStyle: 'italic',
-                color: '#1A1A1A',
+                color: theme.text,
                 lineHeight: 1.35,
                 letterSpacing: '-0.01em',
                 margin: 0,
@@ -118,7 +124,7 @@ export function PenseeView({ post }: { post: Post }) {
               fontSize: '13px',
               marginTop: '16px',
             }}>
-              {formatDate(post.publishDate)}
+              {t('du', language)} {formatDateByLang(post.publishDate, language)}
             </p>
 
             <div style={{
@@ -135,7 +141,7 @@ export function PenseeView({ post }: { post: Post }) {
           <div style={{
             fontFamily: 'Lora, serif',
             fontSize: '17px',
-            color: '#3A3A3A',
+            color: theme.textSecondary,
             maxWidth: '600px',
             margin: '0 auto',
             lineHeight: 2,
