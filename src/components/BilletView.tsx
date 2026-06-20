@@ -2,80 +2,87 @@ import { Post } from '../lib/types';
 import { PortableTextContent } from './PortableTextContent';
 import { useState } from 'react';
 import { ImageViewer } from './ImageViewer';
-import { useLanguage } from '../contexts/LanguageContext'
-import { t, formatDateByLang } from '../lib/translations'
-import { useTheme } from '../hooks/useTheme'
-import { getTheme } from '../lib/theme'
+import { useLanguage } from '../contexts/LanguageContext';
+import { t, formatDateByLang } from '../lib/translations';
+import { useTheme } from '../hooks/useTheme';
+import { getTheme } from '../lib/theme';
 
 export function BilletView({ post }: { post: Post }) {
   const [showImage, setShowImage] = useState(false);
-  const { language } = useLanguage()
-  const { isDark } = useTheme()
-  const theme = getTheme(isDark)
+  const { language } = useLanguage();
+  const { isDark } = useTheme();
+  const theme = getTheme(isDark);
+
+  // Image qui change selon la langue
+  const displayImage =
+    language === 'en' && post.coverImageEn
+      ? post.coverImageEn
+      : post.coverImage;
+
   return (
     <article style={{ minHeight: '100vh', background: theme.bg, paddingBottom: '120px' }}>
 
       {/* IMAGE */}
-      {post.coverImage && (
-  <div
-    onClick={() => setShowImage(true)}
-    style={{
-      position: 'relative',
-      width: '100%',
-      height: '44svh',
-      minHeight: '260px',
-      maxHeight: '420px',
-      overflow: 'hidden',
-      cursor: 'pointer',
-    }}
-  >
-    <img
-      src={post.coverImage}
-      alt={post.coverImageAlt || post.title}
-      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
-    />
-    <div style={{
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, theme.bg 100%)',
-      pointerEvents: 'none',
-    }} />
+      {displayImage && (
+        <div
+          onClick={() => setShowImage(true)}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '44svh',
+            minHeight: '260px',
+            maxHeight: '420px',
+            overflow: 'hidden',
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src={displayImage}
+            alt={post.coverImageAlt || post.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+          />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: `linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0) 70%, ${theme.bg} 100%)`,
+            pointerEvents: 'none',
+          }} />
 
-    {/* INDICATEUR DISCRET */}
-    <div style={{
-      position: 'absolute',
-      top: '16px',
-      right: '16px',
-      width: '36px',
-      height: '36px',
-      borderRadius: '50%',
-      background: 'rgba(0, 0, 0, 0.4)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white',
-      fontSize: '16px',
-      pointerEvents: 'none',
-    }}>
-      ⛶
-    </div>
-  </div>
-)}
+          {/* INDICATEUR DISCRET */}
+          <div style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '16px',
+            pointerEvents: 'none',
+          }}>
+            ⛶
+          </div>
+        </div>
+      )}
 
-{showImage && post.coverImage && (
-  <ImageViewer
-    src={post.coverImage}
-    alt={post.coverImageAlt || post.title || ''}
-    onClose={() => setShowImage(false)}
-  />
-)}
+      {showImage && displayImage && (
+        <ImageViewer
+          src={displayImage}
+          alt={post.coverImageAlt || post.title || ''}
+          onClose={() => setShowImage(false)}
+        />
+      )}
 
       {/* CONTENU */}
       <div style={{
         position: 'relative',
         zIndex: 10,
-        marginTop: post.coverImage ? '-60px' : '40px',
+        marginTop: displayImage ? '-60px' : '40px',
         padding: '0 24px',
       }}>
         <div style={{
@@ -166,13 +173,13 @@ export function BilletView({ post }: { post: Post }) {
             <div style={{
               width: '24px',
               height: '1px',
-              background: '#D8D5CF',
+              background: theme.borderLight,
               margin: '0 auto 20px',
             }} />
             <p style={{
               fontFamily: 'Lora, serif',
               fontStyle: 'italic',
-              color: '#8A8A8A',
+              color: theme.textMuted,
               fontSize: '15px',
               marginBottom: '4px',
             }}>
@@ -180,7 +187,7 @@ export function BilletView({ post }: { post: Post }) {
             </p>
             <p style={{
               fontFamily: 'Inter, sans-serif',
-              color: '#A0A0A0',
+              color: theme.textLight,
               fontSize: '13px',
               letterSpacing: '0.08em',
               marginBottom: '4px',
@@ -189,7 +196,7 @@ export function BilletView({ post }: { post: Post }) {
             </p>
             <p style={{
               fontFamily: 'Inter, sans-serif',
-              color: '#BFBFBF',
+              color: theme.textVeryLight,
               fontSize: '11px',
               letterSpacing: '0.05em',
             }}>

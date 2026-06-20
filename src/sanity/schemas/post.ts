@@ -60,10 +60,10 @@ export default defineType({
         }),
     }),
 
-    // IMAGE
+    // IMAGE FRANÇAISE
     defineField({
       name: 'coverImage',
-      title: 'Image de couverture',
+      title: 'Image de couverture (français)',
       type: 'image',
       options: { hotspot: true },
       hidden: ({ parent }) => parent?.type === 'avant_propos',
@@ -73,10 +73,21 @@ export default defineType({
             (context.parent?.type === 'billet' || context.parent?.type === 'pensee') &&
             !value
           ) {
-            return 'L\'image est obligatoire'
+            return "L'image est obligatoire"
           }
           return true
         }),
+    }),
+
+    // IMAGE ANGLAISE (optionnelle)
+    defineField({
+      name: 'coverImageEn',
+      title: 'Image de couverture (anglais) — optionnelle',
+      type: 'image',
+      options: { hotspot: true },
+      hidden: ({ parent }) => parent?.type === 'avant_propos',
+      description:
+        "Optionnel — image avec texte en anglais. Si vide, l'image française sera utilisée.",
     }),
 
     // CONTENU
@@ -128,9 +139,11 @@ export default defineType({
     },
     prepare({ title, subtitle, type, date, media }: any) {
       const typeLabel =
-        type === 'billet' ? 'Billet'
-        : type === 'avant_propos' ? 'Avant-propos'
-        : 'Pensée du samedi'
+        type === 'billet'
+          ? 'Billet'
+          : type === 'avant_propos'
+          ? 'Avant-propos'
+          : 'Pensée du samedi'
 
       const dateFormatted = date
         ? new Date(date).toLocaleDateString('fr-FR', {

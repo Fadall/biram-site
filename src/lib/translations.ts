@@ -13,6 +13,7 @@ type TranslationKeys =
   | 'janvier' | 'fevrier' | 'mars' | 'avril' | 'mai' | 'juin'
   | 'juillet' | 'aout' | 'septembre' | 'octobre' | 'novembre' | 'decembre'
   | 'lun' | 'mar' | 'mer' | 'jeu' | 'ven' | 'sam' | 'dim'
+  | 'touchez_pour_fermer'
 
 type Translations = {
   fr: Record<TranslationKeys, string>
@@ -32,6 +33,7 @@ export const translations: Translations = {
     publication_non_trouvee: 'Publication non trouvée',
     chargement: 'Chargement...',
     allez_droit_a_vos_billets: 'Allez droit à vos billets',
+    touchez_pour_fermer: 'Touchez pour fermer',
 
     janvier: 'janvier', fevrier: 'février', mars: 'mars', avril: 'avril',
     mai: 'mai', juin: 'juin', juillet: 'juillet', aout: 'août',
@@ -51,6 +53,7 @@ export const translations: Translations = {
     publication_non_trouvee: 'Publication not found',
     chargement: 'Loading...',
     allez_droit_a_vos_billets: 'Go straight to your posts',
+    touchez_pour_fermer: 'Tap to close',
 
     janvier: 'January', fevrier: 'February', mars: 'March', avril: 'April',
     mai: 'May', juin: 'June', juillet: 'July', aout: 'August',

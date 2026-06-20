@@ -9,6 +9,7 @@ export const allPostsQuery = `
     body,
     closingLine,
     customClosing,
-    "coverImage": coverImage.asset->url
+    "coverImage": coverImage.asset->url,
+    "coverImageEn": coverImageEn.asset->url
   }
 `

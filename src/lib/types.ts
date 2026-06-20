@@ -10,6 +10,7 @@ export interface Post {
   closingLine?: string;
   customClosing?: string;
   coverImage?: string;
+  coverImageEn?: string; 
   coverImageAlt?: string;
   authorSignature?: string;
 }

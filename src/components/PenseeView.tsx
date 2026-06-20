@@ -5,77 +5,84 @@ import { ImageViewer } from './ImageViewer';
 import { useLanguage } from '../contexts/LanguageContext';
 import { t, formatDateByLang } from '../lib/translations';
 import { useTheme } from '../hooks/useTheme';
-import { getTheme } from '../lib/theme'
+import { getTheme } from '../lib/theme';
 
 export function PenseeView({ post }: { post: Post }) {
   const [showImage, setShowImage] = useState(false);
-  const { language } = useLanguage()
-  const { isDark } = useTheme()
-  const theme = getTheme(isDark)
+  const { language } = useLanguage();
+  const { isDark } = useTheme();
+  const theme = getTheme(isDark);
+
+  // Image qui change selon la langue
+  const displayImage =
+    language === 'en' && post.coverImageEn
+      ? post.coverImageEn
+      : post.coverImage;
+
   return (
     <article style={{ minHeight: '100vh', background: theme.bg, paddingBottom: '120px' }}>
 
       {/* IMAGE */}
-      {post.coverImage && (
-  <div
-    onClick={() => setShowImage(true)}
-    style={{
-      position: 'relative',
-      width: '100%',
-      height: '38svh',
-      minHeight: '260px',
-      maxHeight: '420px',
-      overflow: 'hidden',
-      cursor: 'pointer',
-    }}
-  >
-    <img
-      src={post.coverImage}
-      alt={post.coverImageAlt || post.title}
-      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
-    />
-    <div style={{
-      position: 'absolute',
-      inset: 0,
-      background: 'linear-gradient(to bottom, transparent 40%, rgba(250,250,247,0.4) 70%, theme.bg 100%)',
-      pointerEvents: 'none',
-    }} />
+      {displayImage && (
+        <div
+          onClick={() => setShowImage(true)}
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '38svh',
+            minHeight: '260px',
+            maxHeight: '420px',
+            overflow: 'hidden',
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src={displayImage}
+            alt={post.coverImageAlt || post.title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+          />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: `linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0) 70%, ${theme.bg} 100%)`,
+            pointerEvents: 'none',
+          }} />
 
-    {/* INDICATEUR DISCRET */}
-    <div style={{
-      position: 'absolute',
-      top: '16px',
-      right: '16px',
-      width: '36px',
-      height: '36px',
-      borderRadius: '50%',
-      background: 'rgba(0, 0, 0, 0.4)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white',
-      fontSize: '16px',
-      pointerEvents: 'none',
-    }}>
-      ⛶
-    </div>
-  </div>
-)}
+          {/* INDICATEUR DISCRET */}
+          <div style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(0, 0, 0, 0.4)',
+            backdropFilter: 'blur(8px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '16px',
+            pointerEvents: 'none',
+          }}>
+            ⛶
+          </div>
+        </div>
+      )}
 
-{showImage && post.coverImage && (
-  <ImageViewer
-    src={post.coverImage}
-    alt={post.coverImageAlt || post.title || ''}
-    onClose={() => setShowImage(false)}
-  />
-)}
+      {showImage && displayImage && (
+        <ImageViewer
+          src={displayImage}
+          alt={post.coverImageAlt || post.title || ''}
+          onClose={() => setShowImage(false)}
+        />
+      )}
 
       {/* CONTENU */}
       <div style={{
         position: 'relative',
         zIndex: 10,
-        marginTop: post.coverImage ? '-60px' : '40px',
+        marginTop: displayImage ? '-60px' : '40px',
         padding: '0 24px',
       }}>
         <div style={{
@@ -90,7 +97,7 @@ export function PenseeView({ post }: { post: Post }) {
           {/* HEADER */}
           <header style={{ textAlign: 'center', marginBottom: '40px' }}>
             <p style={{
-              color: '#6B4C8C',
+              color: theme.pensee,
               letterSpacing: '0.25em',
               fontSize: '10px',
               fontWeight: 600,
@@ -120,17 +127,17 @@ export function PenseeView({ post }: { post: Post }) {
             <p style={{
               fontFamily: 'Lora, serif',
               fontStyle: 'italic',
-              color: '#9A9A9A',
+              color: theme.textLight,
               fontSize: '13px',
               marginTop: '16px',
             }}>
-              {t('du', language)} {formatDateByLang(post.publishDate, language)}
+              {formatDateByLang(post.publishDate, language)}
             </p>
 
             <div style={{
               width: '40px',
               height: '2px',
-              background: '#6B4C8C',
+              background: theme.pensee,
               margin: '32px auto 0',
               borderRadius: '999px',
               opacity: 0.6,
@@ -156,12 +163,12 @@ export function PenseeView({ post }: { post: Post }) {
             <div style={{
               width: '24px',
               height: '1px',
-              background: '#D8D5CF',
+              background: theme.borderLight,
               margin: '0 auto 20px',
             }} />
             <p style={{
               fontFamily: 'Playfair Display, serif',
-              color: '#6B4C8C',
+              color: theme.pensee,
               fontSize: '18px',
               letterSpacing: '-0.01em',
             }}>
@@ -169,7 +176,7 @@ export function PenseeView({ post }: { post: Post }) {
             </p>
             <p style={{
               fontFamily: 'Inter, sans-serif',
-              color: '#BFBFBF',
+              color: theme.textVeryLight,
               fontSize: '11px',
               marginTop: '8px',
               letterSpacing: '0.05em',

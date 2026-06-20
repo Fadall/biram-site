@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
+import { t } from '../lib/translations';
 
 interface ImageViewerProps {
   src: string;
@@ -7,6 +9,8 @@ interface ImageViewerProps {
 }
 
 export function ImageViewer({ src, alt, onClose }: ImageViewerProps) {
+  const { language } = useLanguage();
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -82,7 +86,7 @@ export function ImageViewer({ src, alt, onClose }: ImageViewerProps) {
           textTransform: 'uppercase',
         }}
       >
-        Touchez pour fermer
+        {t('touchez_pour_fermer', language)}
       </p>
     </div>
   );
