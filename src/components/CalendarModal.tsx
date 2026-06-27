@@ -55,7 +55,7 @@ export function CalendarModal({ isOpen, onClose, posts }: CalendarModalProps) {
 
   const typeLabels: Record<string, string> = {
     billet: language === 'en' ? 'Post' : 'Billet',
-    avant_propos: language === 'en' ? 'Foreword' : 'Avant-propos',
+    avant_propos: language === 'en' ? 'Teaser' : 'Aguiche',
     pensee: language === 'en' ? 'Thought' : 'Pensée',
   };
 

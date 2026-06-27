@@ -4,8 +4,27 @@ export default defineType({
   name: 'post',
   title: 'Publication',
   type: 'document',
+
+  // ============================
+  // GROUPES (sections pliables)
+  // ============================
+  fieldsets: [
+    {
+      name: 'french',
+      title: '🇫🇷 Version française',
+      options: { collapsible: true, collapsed: false },
+    },
+    {
+      name: 'english',
+      title: '🇬🇧 Version anglaise (optionnelle)',
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
+
   fields: [
-    // TYPE
+    // ============================
+    // GÉNÉRAL (hors fieldset)
+    // ============================
     defineField({
       name: 'type',
       title: 'Type de publication',
@@ -13,7 +32,7 @@ export default defineType({
       options: {
         list: [
           { title: 'Billet', value: 'billet' },
-          { title: 'Avant-propos', value: 'avant_propos' },
+          { title: 'Aguiche', value: 'avant_propos' },
           { title: 'Pensée du samedi', value: 'pensee' },
         ],
         layout: 'radio',
@@ -21,7 +40,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
 
-    // DATE
     defineField({
       name: 'publishDate',
       title: 'Date de publication',
@@ -30,11 +48,15 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
 
-    // TITRE (billet)
+    // ============================
+    // VERSION FRANÇAISE
+    // ============================
+
     defineField({
       name: 'title',
       title: 'Titre du billet',
       type: 'string',
+      fieldset: 'french',
       hidden: ({ parent }) => parent?.type !== 'billet',
       validation: (Rule) =>
         Rule.custom((value, context: any) => {
@@ -45,11 +67,11 @@ export default defineType({
         }),
     }),
 
-    // SOUS-TITRE (pensée)
     defineField({
       name: 'subtitle',
       title: 'Titre de la pensée',
       type: 'string',
+      fieldset: 'french',
       hidden: ({ parent }) => parent?.type !== 'pensee',
       validation: (Rule) =>
         Rule.custom((value, context: any) => {
@@ -60,41 +82,19 @@ export default defineType({
         }),
     }),
 
-    // IMAGE FRANÇAISE
     defineField({
       name: 'coverImage',
-      title: 'Image de couverture (français)',
+      title: 'Image de couverture',
       type: 'image',
+      fieldset: 'french',
       options: { hotspot: true },
-      hidden: ({ parent }) => parent?.type === 'avant_propos',
-      validation: (Rule) =>
-        Rule.custom((value, context: any) => {
-          if (
-            (context.parent?.type === 'billet' || context.parent?.type === 'pensee') &&
-            !value
-          ) {
-            return "L'image est obligatoire"
-          }
-          return true
-        }),
     }),
 
-    // IMAGE ANGLAISE (optionnelle)
-    defineField({
-      name: 'coverImageEn',
-      title: 'Image de couverture (anglais) — optionnelle',
-      type: 'image',
-      options: { hotspot: true },
-      hidden: ({ parent }) => parent?.type === 'avant_propos',
-      description:
-        "Optionnel — image avec texte en anglais. Si vide, l'image française sera utilisée.",
-    }),
-
-    // CONTENU
     defineField({
       name: 'body',
       title: 'Contenu',
       type: 'array',
+      fieldset: 'french',
       of: [
         {
           type: 'block',
@@ -110,25 +110,91 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
 
-    // PHRASE DE CLÔTURE (billet)
     defineField({
       name: 'closingLine',
-      title: 'Phrase de clôture en italique',
+      title: 'Phrase de clôture',
       type: 'string',
+      fieldset: 'french',
       hidden: ({ parent }) => parent?.type !== 'billet',
     }),
 
-    // PHRASE PERSONNALISÉE (avant-propos)
     defineField({
       name: 'customClosing',
-      title: 'Phrase de fin (optionnelle)',
+      title: 'Phrase de fin',
       type: 'string',
+      fieldset: 'french',
       description:
         'Par défaut : "À demain in sha\'a Allah". Vous pouvez le remplacer si vous voulez',
       hidden: ({ parent }) => parent?.type !== 'avant_propos',
     }),
+
+    // ============================
+    // VERSION ANGLAISE
+    // ============================
+
+    defineField({
+      name: 'titleEn',
+      title: 'Title (English)',
+      type: 'string',
+      fieldset: 'english',
+      hidden: ({ parent }) => parent?.type !== 'billet',
+    }),
+
+    defineField({
+      name: 'subtitleEn',
+      title: 'Thought title (English)',
+      type: 'string',
+      fieldset: 'english',
+      hidden: ({ parent }) => parent?.type !== 'pensee',
+    }),
+
+    defineField({
+      name: 'coverImageEn',
+      title: 'Cover image (English)',
+      type: 'image',
+      fieldset: 'english',
+      options: { hotspot: true },
+    }),
+
+    defineField({
+      name: 'bodyEn',
+      title: 'Content (English)',
+      type: 'array',
+      fieldset: 'english',
+      of: [
+        {
+          type: 'block',
+          styles: [{ title: 'Normal', value: 'normal' }],
+          marks: {
+            decorators: [
+              { title: 'Bold', value: 'strong' },
+              { title: 'Italic', value: 'em' },
+            ],
+          },
+        },
+      ],
+    }),
+
+    defineField({
+      name: 'closingLineEn',
+      title: 'Closing line (English)',
+      type: 'string',
+      fieldset: 'english',
+      hidden: ({ parent }) => parent?.type !== 'billet',
+    }),
+
+    defineField({
+      name: 'customClosingEn',
+      title: 'Closing phrase (English)',
+      type: 'string',
+      fieldset: 'english',
+      hidden: ({ parent }) => parent?.type !== 'avant_propos',
+    }),
   ],
 
+  // ============================
+  // APERÇU
+  // ============================
   preview: {
     select: {
       title: 'title',
@@ -139,11 +205,9 @@ export default defineType({
     },
     prepare({ title, subtitle, type, date, media }: any) {
       const typeLabel =
-        type === 'billet'
-          ? 'Billet'
-          : type === 'avant_propos'
-          ? 'Avant-propos'
-          : 'Pensée du samedi'
+        type === 'billet' ? 'Billet'
+        : type === 'avant_propos' ? 'Aguiche'
+        : 'Pensée du samedi'
 
       const dateFormatted = date
         ? new Date(date).toLocaleDateString('fr-FR', {

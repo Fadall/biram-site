@@ -11,7 +11,6 @@ import { Post } from './lib/types';
 import { TopNavigation } from './components/TopNavigation';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { LanguageToggle } from './components/LanguageToggle';
-import { useTranslatedPost } from './hooks/useTranslatedPost';
 
 function PostPage() {
   const { id } = useParams<{ id: string }>();
@@ -26,7 +25,8 @@ function PostPage() {
   const prev = currentPostData?.prev || null;
   const next = currentPostData?.next || null;
 
-  const { post: translatedPost, translating } = useTranslatedPost(post);
+  const translatedPost = post;
+  const translating = false;
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -23,7 +23,7 @@ type Translations = {
 export const translations: Translations = {
   fr: {
     billet_du: 'Billet du',
-    avant_propos: 'Avant-propos',
+    avant_propos: 'Aguiche',
     pensee_du_samedi: 'La pensée du samedi',
     du: 'du',
     la_reflexion_qui_nous_reunira: 'La réflexion qui nous réunira demain le',
@@ -43,7 +43,7 @@ export const translations: Translations = {
   },
   en: {
     billet_du: 'Post of',
-    avant_propos: 'Foreword',
+    avant_propos: 'Teaser',
     pensee_du_samedi: 'Saturday\'s Thought',
     du: 'of',
     la_reflexion_qui_nous_reunira: 'The reflection that will bring us together tomorrow on',

@@ -12,6 +12,8 @@ export function PenseeView({ post }: { post: Post }) {
   const { language } = useLanguage();
   const { isDark } = useTheme();
   const theme = getTheme(isDark);
+  const subtitle = language === 'en' && post.subtitleEn ? post.subtitleEn : post.subtitle;
+  const body = language === 'en' && post.bodyEn ? post.bodyEn : post.body;
 
   // Image qui change selon la langue
   const displayImage =
@@ -108,7 +110,7 @@ export function PenseeView({ post }: { post: Post }) {
               {t('pensee_du_samedi', language)}
             </p>
 
-            {post.subtitle && (
+            {subtitle && (
               <h1 style={{
                 fontFamily: 'Playfair Display, serif',
                 fontSize: '26px',
@@ -120,7 +122,7 @@ export function PenseeView({ post }: { post: Post }) {
                 margin: 0,
                 padding: '0 16px',
               }}>
-                {post.subtitle}
+                {subtitle}
               </h1>
             )}
 
@@ -155,7 +157,7 @@ export function PenseeView({ post }: { post: Post }) {
             fontStyle: 'italic',
             padding: '0 8px',
           }}>
-            <PortableTextContent value={post.body} />
+            <PortableTextContent value={body} />
           </div>
 
           {/* SIGNATURE */}

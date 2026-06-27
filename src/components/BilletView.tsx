@@ -12,6 +12,9 @@ export function BilletView({ post }: { post: Post }) {
   const { language } = useLanguage();
   const { isDark } = useTheme();
   const theme = getTheme(isDark);
+  const title = language === 'en' && post.titleEn ? post.titleEn : post.title;
+  const body = language === 'en' && post.bodyEn ? post.bodyEn : post.body;
+  const closingLine = language === 'en' && post.closingLineEn ? post.closingLineEn : post.closingLine;
 
   // Image qui change selon la langue
   const displayImage =
@@ -38,7 +41,7 @@ export function BilletView({ post }: { post: Post }) {
         >
           <img
             src={displayImage}
-            alt={post.coverImageAlt || post.title}
+            alt={post.coverImageAlt || title}
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
           />
           <div style={{
@@ -73,7 +76,7 @@ export function BilletView({ post }: { post: Post }) {
       {showImage && displayImage && (
         <ImageViewer
           src={displayImage}
-          alt={post.coverImageAlt || post.title || ''}
+          alt={post.coverImageAlt || title || ''}
           onClose={() => setShowImage(false)}
         />
       )}
@@ -108,7 +111,7 @@ export function BilletView({ post }: { post: Post }) {
               {t('billet_du', language)} {formatDateByLang(post.publishDate, language)}
             </p>
 
-            {post.title && (
+            {title && (
               <h1 style={{
                 fontFamily: 'Playfair Display, serif',
                 fontSize: '24px',
@@ -119,7 +122,7 @@ export function BilletView({ post }: { post: Post }) {
                 margin: 0,
                 padding: '0 16px',
               }}>
-                {post.title}
+                {title}
               </h1>
             )}
 
@@ -142,11 +145,11 @@ export function BilletView({ post }: { post: Post }) {
             lineHeight: 1.9,
             padding: '0 8px',
           }}>
-            <PortableTextContent value={post.body} />
+            <PortableTextContent value={body} />
           </div>
 
           {/* CLÔTURE */}
-          {post.closingLine && (
+          {closingLine && (
             <div style={{ marginTop: '56px', textAlign: 'center' }}>
               <div style={{
                 width: '32px',
@@ -163,7 +166,7 @@ export function BilletView({ post }: { post: Post }) {
                 padding: '0 24px',
                 margin: 0,
               }}>
-                {post.closingLine}
+                {closingLine}
               </p>
             </div>
           )}
