@@ -188,7 +188,9 @@ export function AvantProposView({ post }: { post: Post }) {
               fontSize: '15px',
               marginBottom: '12px',
             }}>
-              {customClosing || t('a_demain_in_sha_a_allah', language)}
+              {language === 'en'
+                ? (post.customClosingEn || t('a_demain_in_sha_a_allah', language))
+                : (customClosing || t('a_demain_in_sha_a_allah', language))}
             </p>
             <p style={{
               fontFamily: 'Inter, sans-serif',
