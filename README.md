@@ -1,51 +1,50 @@
-# Biram Pathe Fall — Espace de lecture
+# Biram Pathe Fall — Reading Space
 
-Ce projet est un site personnel minimaliste et élégant pour l'auteur Biram Pathe Fall. Il est conçu pour une lecture optimale sur mobile, avec une gestion centralisée des publications via Sanity CMS.
+This project is a minimalist, elegant personal website for the author Biram Pathe Fall. It is designed for an optimal mobile reading experience, with content managed centrally via Sanity CMS.
 
-## Stack Technique
+## Technical Stack
 
-- **Framework**: React + Vite (mimant l'architecture demandée)
+- **Framework**: React + Vite (following the requested architecture)
 - **Styling**: Tailwind CSS
-- **CMS**: Sanity (Studio intégré)
+- **CMS**: Sanity (integrated Studio)
 - **Routing**: React Router
 - **Animations**: Framer Motion
 - **Date Handling**: date-fns
 
-## Structure du Projet
+## Project Structure
 
-- `/src/components`: Composants UI (BilletView, AvantProposView, PenseeView, Calendar, etc.)
-- `/src/lib`: Utilitaires, types, requêtes GROQ et client Sanity.
-- `/src/hooks`: Logique de récupération des données.
-- `/src/sanity`: Schémas pour Sanity Studio.
+- `/src/components`: UI components (BilletView, AvantProposView, PenseeView, Calendar, etc.)
+- `/src/lib`: Utilities, types, GROQ queries, and the Sanity client.
+- `/src/hooks`: Data-fetching logic.
+- `/src/sanity`: Schemas for Sanity Studio.
 
-## Types de Publications
+## Content Types
 
-1. **Billet**: Publié Lundi, Mercredi, Vendredi. Inclut une photo de l'auteur et un texte long.
-2. **Avant-propos**: Publié Dimanche, Mardi, Jeudi. Annonce la réflexion du lendemain. Design textuel épuré.
-3. **Pensée du samedi**: Publié le Samedi. Photo d'ambiance et texte poétique/réflexif.
+1. **Billet (Post)**: Published on Mondays, Wednesdays, and Fridays. Includes a photo of the author and a long-form text.
+2. **Avant-propos (Foreword)**: Published on Sundays, Tuesdays, and Thursdays. Previews the following day’s reflection. Features a clean, text-focused design.
+3. **Pensée du samedi (Saturday Thought)**: Published on Saturdays. Includes an atmospheric photo and a poetic or reflective text.
 
 ## Installation
 
-1. Cloner le projet.
-2. Installer les dépendances : `npm install`
-3. Configurer Sanity :
-   - Créer un projet sur [sanity.io/manage](https://sanity.io/manage)
-   - Ajouter le `projectId` dans `.env.local` et `src/lib/sanity.client.ts`.
-4. Lancer le studio : `npx sanity start` (dans un dossier Sanity séparé si nécessaire, ou configurer le studio intégré).
-5. Lancer le site : `npm run dev`
+1. Clone the project.
+2. Install dependencies: `npm install`
+3. Configure Sanity:
+   - Create a project at [sanity.io/manage](https://sanity.io/manage)
+   - Add the `projectId` to `.env.local` and `src/lib/sanity.client.ts`.
+4. Launch the Studio: `npx sanity start` (in a separate Sanity folder if necessary, or via the integrated Studio configuration). 5. Launch the site: `npm run dev`
 
 ## Administration
 
-L'auteur peut accéder à l'interface d'administration via la route `/studio` (si configurée avec `next-sanity` ou en utilisant le studio Sanity standard).
+The author can access the administration interface via the `/studio` route (if configured with `next-sanity` or by using the standard Sanity Studio).
 
 ## Design System
 
-- **Typographies**: 
-  - Titres : Playfair Display
-  - Corps : Lora
-  - UI : Inter
-- **Couleurs**:
-  - Fond : #FAFAF7
-  - Billet : #2C4A7C
-  - Avant-propos : #B8860B
-  - Pensée : #6B4C8C
+- **Typography**:
+  - Headings: Playfair Display
+  - Body text: Lora
+  - UI: Inter
+- **Colors**:
+  - Background: #FAFAF7
+  - Post: #2C4A7C
+  - Foreword: #B8860B
+  - Thought: #6B4C8C
